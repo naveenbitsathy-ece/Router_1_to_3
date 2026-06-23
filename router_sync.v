@@ -14,13 +14,13 @@ input full_1,
 input full_2,
 
 output [2:0]write_en,
-output soft_rst_0,
-output soft_rst_1,
-output soft_rst_2,
 output valid_out_0,
 output valid_out_1,
 output valid_out_2,
-output reg fifo_full
+output reg fifo_full,
+output reg soft_rst_0,
+output reg soft_rst_1,
+output reg soft_rst_2
 );
 reg [1:0]temp_reg;
 reg [4:0]count_0,count_1,count_2;
