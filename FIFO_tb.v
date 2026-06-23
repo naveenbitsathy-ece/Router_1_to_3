@@ -100,8 +100,15 @@ endtask
 // Read Packet Task
 //---------------------------------------------------
 
-task read_fifo;
-
+task read_fifo(
+    input a,
+    input [8:0]b
+);
+begin 
+ a=rd_en;
+ b=data_out;
+ #10;
+end 
 integer i;
 
 begin
@@ -247,7 +254,11 @@ begin
     $finish;
 
 end
-
+initial 
+begin
+    $monitor("Time=%0t rst_n=%b soft_rst=%b rd_en=%b wr_en=%b data_in=%b data_out=%b",
+     $time,rst_n,soft_rst,rd_en,wr_en,data_in,data_out); 
+end 
 
 //---------------------------------------------------
 // Dump File
@@ -256,7 +267,7 @@ end
 initial
 begin
     $dumpfile("fifo.vcd");
-    $dumpvars(0,fifo_tb.v);
+    $dumpvars(0,fifo_tb);
 end
 
 endmodule
