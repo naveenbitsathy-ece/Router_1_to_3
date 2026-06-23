@@ -62,4 +62,95 @@ case (temp_reg)
        default: fifo_full = full_0;
 endcase 
 
+//Logic for soft reset 0
+always@(posedge clk)
+begin
+    if(!rst_n) 
+    begin 
+    count_0<=1;
+    soft_rst_0<=0;
+    end 
+    else if(!valid_out_0)
+    begin 
+    count_0<=1;
+    soft_rst_0<=0;
+    end 
+    else if(read_en_0)
+    begin 
+    count_0<=1;
+    soft_rst_0<=0;
+    end 
+    else if(count_0 == 30)
+    begin 
+     count_0<=1
+     soft_rst_0<=1;
+    end 
+   else 
+   begin 
+   count_0<=count_0 + 1'b1;
+   soft_rst_0 <= 0;
+   end 
+end 
+
+//Logic for soft reset 1
+always@(posedge clk)
+begin
+    if(!rst_n) 
+    begin 
+    count_1<=1;
+    soft_rst_1<=0;
+    end 
+    else if(!valid_out_1)
+    begin 
+    count_1<=1;
+    soft_rst_1<=0;
+    end 
+    else if(read_en_1)
+    begin 
+    count_1<=1;
+    soft_rst_1<=0;
+    end 
+    else if(count_1 == 30)
+    begin 
+     count_1<=1
+     soft_rst_1<=1;
+    end 
+   else 
+   begin 
+   count_1<=count_1 + 1'b1;
+   soft_rst_1 <= 0;
+   end 
+end 
+
+//Logic for soft reset 2
+
+always@(posedge clk)
+begin
+    if(!rst_n) 
+    begin 
+    count_2<=1;
+    soft_rst_2<=0;
+    end 
+    else if(!valid_out_2)
+    begin 
+    count_2<=1;
+    soft_rst_2<=0;
+    end 
+    else if(read_en_2)
+    begin 
+    count_2<=1;
+    soft_rst_2<=0;
+    end 
+    else if(count_2 == 30)
+    begin 
+     count_2<=1
+     soft_rst_2<=1;
+    end 
+   else 
+   begin 
+   count_2<=count_2 + 1'b1;
+   soft_rst_2 <= 0;
+   end 
+end 
+
 endmodule 
