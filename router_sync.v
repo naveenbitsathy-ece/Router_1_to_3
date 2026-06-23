@@ -41,9 +41,9 @@ begin
     write_en =0;
 else 
 case (temp_reg)
-       2'b00 : write_en = 3'b001;
-       2'b01 : write_en = 3'b010;
-       2'b10 : write_en = 3'b100;
+       2'b00 : write_en = 3'b001;    // FSM 0 activated
+       2'b01 : write_en = 3'b010;    // FSM 1 activated
+       2'b10 : write_en = 3'b100;     // FSM 2 activated
        default: write_en = 3'b000;
 endcase 
 end
