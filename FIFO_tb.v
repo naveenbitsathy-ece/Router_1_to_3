@@ -8,9 +8,9 @@ module FIFO_tb();
     wire full,empty;
 
 reg [8:0]FIFO[15:0];  // Depth 16 bit and 9 bit width
-reg wr_ptr[3:0];
-reg rd_ptr[3:0];
-reg counter[3:0];    // count 0 to 16
+reg [3:0]wr_ptr;
+reg [3:0]rd_ptr;
+reg [3:0]counter;    // count 0 to 16
 
 FIFO DUT(
      clk,rst_n,
@@ -72,7 +72,7 @@ end
 initial
 begin
     $dumpfile("FIFO.vcd");
-    $dumpvars(0,FIFO_tb.v); 
+    $dumpvars(0, FIFO_tb.v); 
 end 
 
 initial 
