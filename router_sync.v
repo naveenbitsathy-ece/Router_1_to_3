@@ -57,9 +57,9 @@ assign valid_out_2 = ~empty_2;
 always@(*)
 case (temp_reg)
        2'b00 : fifo_full = full_0;
-       2'b00 : fifo_full = full_1;
-       2'b00 : fifo_full = full_2;
-       default: fifo_full = full_0;
+       2'b01 : fifo_full = full_1;
+       2'b10 : fifo_full = full_2;
+       default: fifo_full = 0;
 endcase 
 
 //Logic for soft reset 0
