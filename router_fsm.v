@@ -40,6 +40,7 @@ reg [1:0] addr;          //Temp reg to store address
 
 always@(posedge clk)
 begin 
+  addr=data_in; 
   if(!rst_n)
     state <= DECODE_ADDRESS;
   else if(soft_rst_0 || soft_rst_1 || soft_rst_2)
@@ -51,7 +52,7 @@ end
 // Next state combinational logic 
 always@(*)
 begin
-addr=data_in; 
+
  next_state = DECODE_ADDRESS;
  case(state)
  DECODE_ADDRESS:begin            //DECODE_ADDRESS
