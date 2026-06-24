@@ -13,7 +13,7 @@ input full_0,
 input full_1,
 input full_2,
 
-output [2:0]write_en,
+output reg [2:0]write_en,
 output valid_out_0,
 output valid_out_1,
 output valid_out_2,
@@ -38,8 +38,8 @@ end
 always@(*)
 case (temp_reg)
        2'b00 : fifo_full = full_0;
-       2'b00 : fifo_full = full_1;
-       2'b00 : fifo_full = full_2;
+       2'b01 : fifo_full = full_1;
+       2'b10 : fifo_full = full_2;
        default: fifo_full = full_0;
 endcase 
 
@@ -62,18 +62,6 @@ assign valid_out_0 = ~empty_0;
 assign valid_out_1 = ~empty_1;
 assign valid_out_2 = ~empty_2;
 
-<<<<<<< HEAD
-//fifo full
-always@(*)
-case (temp_reg)
-       2'b00 : fifo_full = full_0;
-       2'b01 : fifo_full = full_1;
-       2'b10 : fifo_full = full_2;
-       default: fifo_full = 0;
-endcase 
-=======
-
->>>>>>> 28297d2 (fsm)
 
 //Logic for soft reset 0
 always@(posedge clk)
@@ -95,7 +83,7 @@ begin
     end 
     else if(count_0 == 30)
     begin 
-     count_0<=1
+     count_0<=1;
      soft_rst_0<=1;
     end 
    else 
@@ -125,7 +113,7 @@ begin
     end 
     else if(count_1 == 30)
     begin 
-     count_1<=1
+     count_1<=1;
      soft_rst_1<=1;
     end 
    else 
@@ -156,7 +144,7 @@ begin
     end 
     else if(count_2 == 30)
     begin 
-     count_2<=1
+     count_2<=1;
      soft_rst_2<=1;
     end 
    else 
