@@ -34,6 +34,15 @@ begin
       temp_reg<=data_in;
 end 
 
+//fifo full
+always@(*)
+case (temp_reg)
+       2'b00 : fifo_full = full_0;
+       2'b00 : fifo_full = full_1;
+       2'b00 : fifo_full = full_2;
+       default: fifo_full = full_0;
+endcase 
+
 //write enable logic 
 always@(*)
 begin 
@@ -53,6 +62,7 @@ assign valid_out_0 = ~empty_0;
 assign valid_out_1 = ~empty_1;
 assign valid_out_2 = ~empty_2;
 
+<<<<<<< HEAD
 //fifo full
 always@(*)
 case (temp_reg)
@@ -61,6 +71,9 @@ case (temp_reg)
        2'b10 : fifo_full = full_2;
        default: fifo_full = 0;
 endcase 
+=======
+
+>>>>>>> 28297d2 (fsm)
 
 //Logic for soft reset 0
 always@(posedge clk)
