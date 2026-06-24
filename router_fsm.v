@@ -1,5 +1,5 @@
 
-module router_fsm(
+	module router_fsm(
   input clk,rst_n,
   input pkt_valid,
   input parity_done,
@@ -25,7 +25,7 @@ module router_fsm(
 parameter  DECODE_ADDRESS=3'b000 ; 
 parameter  LOAD_FIRST_DATA = 3'b001 ;
 parameter  LOAD_DATA = 3'b010 ;
-parameter  WAIT_TILL_EMPTY = 3'b101 ;
+parameter  WAIT_TILL_EMPTY = 3'b011 ;
 parameter  FIFO_FULL_STATE = 3'b100;
 parameter  LOAD_PARITY = 3'b101;
 parameter  CHECK_PARITY_ERROR = 3'b110;
@@ -58,22 +58,22 @@ addr=data_in;
 
   
 
-  if((pkt_valid && data_in[1:0]==2'b00 && fifo_empty_0) ||
-   (pkt_valid && data_in[1:0]==2'b01 && fifo_empty_1) ||
-   (pkt_valid && data_in[1:0]==2'b10 && fifo_empty_2))
+  if((pkt_valid && (data_in[1:0]==2'b00) && fifo_empty_0) ||
+   (pkt_valid && (data_in[1:0]==2'b01) && fifo_empty_1) ||
+   (pkt_valid && (data_in[1:0]==2'b10) && fifo_empty_2))
 	
        next_state=LOAD_FIRST_DATA;
 
-  else if((pkt_valid & data_in[1:0] == 2'b00 & !fifo_empty_0)||
-  (pkt_valid & data_in[1:0] == 2'b01 & !fifo_empty_1)||
-  (pkt_valid & data_in[1:0] == 2'b10 & !fifo_empty_2) )
+  else if((pkt_valid & (data_in[1:0] == 2'b00) & !fifo_empty_0)||
+  (pkt_valid & (data_in[1:0] == 2'b01) & !fifo_empty_1)||
+  (pkt_valid & (data_in[1:0] == 2'b10) & !fifo_empty_2) )
 
        next_state = WAIT_TILL_EMPTY;
 
    else 
       next_state = DECODE_ADDRESS;     
- end 
 
+end 
  LOAD_FIRST_DATA:begin             //LOAD_FIRST_DATA
   next_state = LOAD_DATA;
  end 
@@ -89,8 +89,8 @@ addr=data_in;
  end 
 
  WAIT_TILL_EMPTY:begin            // WAIT_TILL_EMPTY
-  if((fifo_empty_0 && (addr == 0)) || (fifo_empty_0 && (addr == 1)) ||
-  (fifo_empty_0 && (addr == 2)))
+  if((fifo_empty_0 && (addr == 0)) || (fifo_empty_1 && (addr == 1)) ||
+  (fifo_empty_2 && (addr == 2)))
 
        next_state = LOAD_FIRST_DATA;
 
@@ -105,9 +105,10 @@ addr=data_in;
   next_state = LOAD_AFTER_FULL;
  end 
 
- LOAD_PARITY: next_state = CHECK_PARITY_ERROR ;     //LOAD_PARITY
+ LOAD_PARITY: begin
+ next_state = CHECK_PARITY_ERROR ;     //LOAD_PARITY
  
-
+end 
  CHECK_PARITY_ERROR:begin                // CHECK_PARITY_ERROR
   if(!fifo_full)
   next_state = DECODE_ADDRESS;
