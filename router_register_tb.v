@@ -34,5 +34,46 @@ clk=~clk;
 
 initial 
 begin 
+     @(negedge clk)
+     rst_n=0; 
+     #5;
+     rst_n=1;
+end 
+
+initial 
+begin
+    detect_add=1;
+    pkt_valid=1;
+    data_in=8'b00011001; 
+    data_in=8'b11011001; 
+    data_in=8'b01011001; 
+    data_in=8'b10111001; 
+    data_in=8'b11011001; 
+    data_in=8'b11011001; 
+    data_in=8'b11011001; 
+    data_in=8'b11011001; 
+    
+    lfd_state=1;
+end 
+
+initial 
+begin
+    ld_state=1;
+    fifo_full=1;
+    #5;
+  
+    laf_state=1; 
+end 
+
+initial 
+begin
+    $dumpfile("naveen.vcd");
+    $dumpvars(0,router_register_tb); 
+end 
+initial
+begin
+   $monitor("Time =%0t rst_n=%b detect_addr=%b pkt_valid=%b lfd_state=%b counter=%b ld_state=%b fifo_full=%b laf_state=%b fifo_full_reg=%b data_in=%b",
+             $time,rsr_n,detect_add,pkt_valid,lfd_state,counter,ld_state,fifo_full,laf_state,fifo_full_reg,data_in);
+
 end 
 endmodule 

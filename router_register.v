@@ -1,5 +1,5 @@
 module router_register(
-input clk,rst_n.
+input clk,rst_n,
 input pkt_valid,
 input [7:0]data_in,
 input fifo_full,
@@ -19,7 +19,7 @@ output [7:0]data_out
 reg [7:0]header_reg;
 reg [7:0]fifo_full_reg;
 reg [7:0]internal_parity_reg;
-reg [7:2]xor_reg;
+ // reg [7:2]xor_reg;
 reg [6:0]counter;
 reg [7:0]packet_parity_reg;
 
@@ -55,12 +55,13 @@ if(!rst_n)
 else if(detect_add && pkt_valid)
 begin 
      header_reg<=data_in;
-     xor_reg<=[7:2]data_in;
+    
 end
 else if(lfd_state)
      data_out <= header_reg;
 end 
-assign counter = xor_reg; 
+
+assign counter = header_reg[7:2];
 
 //Fifo full register
 always@(posedge clk)
