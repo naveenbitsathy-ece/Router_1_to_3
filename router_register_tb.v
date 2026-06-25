@@ -73,7 +73,7 @@ end
 initial
 begin
    $monitor("Time =%0t rst_n=%b detect_addr=%b pkt_valid=%b lfd_state=%b counter=%b ld_state=%b fifo_full=%b laf_state=%b fifo_full_reg=%b data_in=%b",
-             $time,rsr_n,detect_add,pkt_valid,lfd_state,counter,ld_state,fifo_full,laf_state,fifo_full_reg,data_in);
+             $time,rst_n,detect_add,pkt_valid,lfd_state,counter,ld_state,fifo_full,laf_state,fifo_full_reg,data_in);
 
 end 
 endmodule 

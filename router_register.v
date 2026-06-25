@@ -10,10 +10,10 @@ input laf_state,
 input lfd_state,
 input full_state,
 
-output parity_done,
-output low_pkt_valid,
-output err,
-output [7:0]data_out
+output reg parity_done,
+output reg low_pkt_valid,
+output reg err,
+output reg [7:0]data_out
 );
 
 reg [7:0]header_reg;
@@ -25,13 +25,13 @@ reg [7:0]packet_parity_reg;
 
 always@(posedge clk)
 begin
-    if(!rst_in)
+    if(!rst_n)
     begin
         data_out <= 0;
         err <= 0;
         parity_done <= 0;
         low_pkt_valid <= 0; 
-        xor_reg <= 0;
+        //xor_reg <= 0;
         counter <= 0;
        
     end  
@@ -59,9 +59,10 @@ begin
 end
 else if(lfd_state)
      data_out <= header_reg;
+     counter <= header_reg[7:2];
 end 
 
-assign counter = header_reg[7:2];
+
 
 //Fifo full register
 always@(posedge clk)
