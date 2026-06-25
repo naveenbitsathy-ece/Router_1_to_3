@@ -19,89 +19,94 @@ output reg [7:0]data_out
 reg [7:0]header_reg;
 reg [7:0]fifo_full_reg;
 reg [7:0]internal_parity_reg;
- // reg [7:2]xor_reg;
-reg [6:0]counter;
 reg [7:0]packet_parity_reg;
 
-always@(posedge clk)
-begin
-    if(!rst_n)
-    begin
-        data_out <= 0;
-        err <= 0;
-        parity_done <= 0;
-        low_pkt_valid <= 0; 
-        //xor_reg <= 0;
-        counter <= 0;
-       
-    end  
-    else if((ld_state==1) & 
-    ((fifo_full==0) & (pkt_valid==0)))
-        parity_done <= 1;
-    else if (rst_int_reg)
-        low_pkt_valid <= 0;
-    else if(detect_add)
-        parity_done <= 0;
-    else if(!ld_state && !pkt_valid)
-        low_pkt_valid <= 1;
-end 
- 
 // Header register
-
 always@(posedge clk)
 begin 
 if(!rst_n)
      header_reg<=0;
-else if(detect_add && pkt_valid)
+else if(detect_add && pkt_valid && data_in[1:0]!=3)
+     header_reg <= data_in;
+end 
+
+//fifo full state byte register logic 
+always@(posedge clk)
 begin 
-     header_reg<=data_in;
-    
-end
+if(!rst_n)
+     fifo_full_reg<=0;
+else if(detect_add && pkt_valid) 
+     fifo_full_reg <= data_in;
+end 
+
+//packet_parity_reg
+always@(posedge clk)
+begin
+if(!rst_n)
+   packet_parity_reg <= 0;
+else if(detect_add)
+   packet_parity_reg <= 0;
+else if(ld_state && !pkt_valid)
+   packet_parity_reg <= data_in;
+end 
+
+//Internal parity reg
+always@(posedge clk)
+begin 
+if(!rst_n)
+  internal_parity_reg <= 0;
+else if(detect_add)
+  internal_parity_reg <= 0;
 else if(lfd_state)
-     data_out <= header_reg;
-     counter <= header_reg[7:2];
+  internal_parity_reg <= internal_parity_reg ^ header_reg;
+else if(pkt_valid && ld_state && !full_state)
+   internal_parity_reg <= internal_parity_reg ^ data_in;
 end 
 
-
-
-//Fifo full register
-always@(posedge clk)
-begin
-    if(!rst_n)
-      fifo_full_reg <= 0; 
-    else if(ld_state && !fifo_full)
-      data_out <= data_in;
-    else if(ld_state && fifo_full)
-      fifo_full_reg <= data_in;
-    else if(laf_state)
-      data_out <= fifo_full_reg;
-end 
-
-
-//Internal_parity_reg
+//data_out logic
 always@(posedge clk)
 begin 
-   if(!rst_n)
-      internal_parity_reg <= 0;
-   else if(header_reg)
-      internal_parity_reg <= header_reg;
-   else if(counter != 0)
-   begin 
-      internal_parity_reg <= internal_parity_reg ^^ data_in;
-      counter = counter - 1'b1; 
-   end 
-end 
-
-//Packet parity reg 
+if(!rst_n)
+  data_out <= 0;
+else if(detect_add && pkt_valid && data_in[1:0]!=2'd3)
+  data_out <= data_out;
+else if(lfd_state)
+  data_out <= header_reg;
+else if(ld_state && !fifo_full)
+  data_out <= data_in;
+else if(ld_state && fifo_full)
+  data_out <= data_out; 
+else if(laf_state)
+  data_out <= fifo_full_reg;
+end
+//Logic for parity_done 
 always@(posedge clk)
 begin
-    if(!rst_n)
-       packet_parity_reg <= 0;
-    else if(counter + 1)
-       packet_parity_reg <= data_in;
-    else if(internal_parity_reg ==  packet_parity_reg)
-       parity_done <= 1;
-     else if(internal_parity_reg !=  packet_parity_reg)
-       parity_done <= 0;
+   if(!rst_n)
+     parity_done <= 0; 
+   else if(detect_add)
+     parity_done <= 0;
+   else if((ld_state && !fifo_full && !pkt_valid) || (laf_state && low_pkt_valid && !parity_done))
+     parity_done <= 1; 
+end 
+
+//Logic for low_pkt_valid
+always@(posedge clk)
+begin
+if(!rst_n)
+   low_pkt_valid <= 0;
+else if(rst_int_reg)
+   low_pkt_valid <= 0; 
+else if(ld_state && !pkt_valid)
+   low_pkt_valid <= 1;
+end
+
+//Logic for err 
+always@(posedge clk)
+begin
+if(!rst_n)
+   err <= 0;
+else if(parity_done && (packet_parity_reg != internal_parity_reg))
+ err <= 1;
 end 
 endmodule 
