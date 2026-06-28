@@ -1,22 +1,28 @@
 `timescale 1ns/1ps
 
-module fifo(
-    input clk,rst_n,soft_rst,
-    input rd_en,wr_en,
+module router_fifo(
+    input clk,
+    input rst_n,
+    input soft_rst,
+    input rd_en,
+    input wr_en,
     input [7:0]data_in,
     input lfd_state,
+
     output reg [7:0]data_out,
-    output empty,full
+    output empty,
+    output full
 );
-reg [8:0]mem[0:15];
- reg [6:0]counter;
- reg [4:0]rd_ptr,wr_ptr;
-integer i;
+
+    reg [8:0]mem[0:15];
+    reg [6:0]counter;
+    reg [4:0]rd_ptr,wr_ptr;
+    integer i;
 //-----------------------------------------------------------------------------
 //
 always@(posedge clk)
 begin 
-if(rst_n)
+if(!rst_n)
     counter<=7'b0;
 else if(soft_rst)
     counter<=7'b0;
@@ -31,30 +37,6 @@ end
 assign full=(wr_ptr  == {!rd_ptr[4],rd_ptr[3:0]});   //Full logic 
 assign empty=(rd_ptr==wr_ptr);                       //empty logic 
 
-//-------------------------------------------------------------------------------
-//Read logic 
-
-always@(posedge clk)
-begin
-    if(!rst_n)
-    begin 
-    data_out<=0;
-    rd_ptr<=0;
-    end 
-    else if(soft_rst)
-    begin 
-    data_out<=8'hz;;
-     rd_ptr<=0;
-    end 
-    
-    else if(rd_en && !empty)
-    begin
-        data_out<=mem[rd_ptr[3:0]];
-        rd_ptr<=rd_ptr+1;
-    end  
-    else if(counter==0 && data_out!=0 )
-    data_out<=8'hz;
-end 
 
 //----------------------------------------------------------------------------------
 //Write logic 
@@ -78,4 +60,30 @@ begin
     wr_ptr<=wr_ptr+1;
     end 
 end 
+
+//-------------------------------------------------------------------------------
+//Read logic 
+
+always@(posedge clk)
+begin
+    if(!rst_n)
+    begin 
+    data_out<=0;
+    rd_ptr<=0;
+    end 
+    else if(soft_rst)
+    begin 
+    data_out<=8'hz;
+     rd_ptr<=0;
+    end 
+    
+    else if(rd_en && !empty)
+    begin
+        data_out<=mem[rd_ptr[3:0]];
+        rd_ptr<=rd_ptr+1;
+    end  
+    else if(counter==0 && data_out!=0 )
+    data_out<=8'hz;
+end 
+
     endmodule  

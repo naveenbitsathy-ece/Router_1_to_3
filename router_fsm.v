@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 
 	module router_fsm(
   input clk,rst_n,
@@ -11,8 +12,8 @@
   input fifo_empty_0,
   input fifo_empty_1,
   input fifo_empty_2,
-  
-  output low_pkt_valid,
+  input low_pkt_valid,
+   
   output detect_add,
   output busy,
   output ld_state,

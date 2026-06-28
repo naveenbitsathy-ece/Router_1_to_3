@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module router_register(
 input clk,rst_n,
 input pkt_valid,

@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module router_sync(
 input clk,rst_n,
 input detect_addr,
@@ -13,10 +15,10 @@ input full_0,
 input full_1,
 input full_2,
 
-output reg [2:0]write_en,
 output valid_out_0,
 output valid_out_1,
 output valid_out_2,
+output reg [2:0]write_en,
 output reg fifo_full,
 output reg soft_rst_0,
 output reg soft_rst_1,
