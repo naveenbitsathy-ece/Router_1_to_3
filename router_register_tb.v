@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module router_register_tb();
 reg clk,rst_n;
 reg pkt_valid;
@@ -135,5 +137,11 @@ begin
 
     #3000;
     $finish; 
+end 
+
+initial 
+begin
+    $dumpfile("naveen.vcd");
+    $dumpvars(0, router_register_tb); 
 end 
 endmodule 

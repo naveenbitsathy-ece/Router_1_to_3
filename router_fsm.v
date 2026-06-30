@@ -12,8 +12,8 @@
   input fifo_empty_0,
   input fifo_empty_1,
   input fifo_empty_2,
-  input low_pkt_valid,
-   
+  
+  output low_pkt_valid,
   output detect_add,
   output busy,
   output ld_state,

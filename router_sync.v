@@ -2,7 +2,7 @@
 
 module router_sync(
 input clk,rst_n,
-input detect_addr,
+input detect_add,
 input [1:0]data_in,
 input write_en_reg,
 input read_en_0,
@@ -32,7 +32,7 @@ always@(posedge clk)
 begin
     if(!rst_n) 
     temp_reg<=0;
-    else if(detect_addr)
+    else if(detect_add)
       temp_reg<=data_in;
 end 
 

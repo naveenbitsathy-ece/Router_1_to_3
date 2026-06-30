@@ -20,8 +20,8 @@ wire [2:0]write_en;
 wire [7:0]data_out;
 
 router_fsm FSM(
-            .clock(clk),
-            .resetn(rst_n),
+            .clk(clock),
+            .rst_n(resetn),
             .pkt_valid(pkt_valid),
             .parity_done(parity_done),
             .data_in(data_in[1:0]),
@@ -40,7 +40,7 @@ router_fsm FSM(
             .full_state(full_state),
             .write_en_reg(write_en_reg),
             .rst_int_reg(rst_int_reg),
-            .lfd_state(.lfd_state)
+            .lfd_state(lfd_state)
 );
 
 router_sync synchroniser(
@@ -75,7 +75,7 @@ router_register Register(
              .data_in(data_in[7:0]),
              .fifo_full(fifo_full),
              .rst_int_reg(rst_int_reg),
-             .detect_add(.detect_add),
+             .detect_add(detect_add),
              .ld_state(ld_state),
              .laf_state(laf_state),
              .lfd_state(lfd_state),
