@@ -65,19 +65,19 @@ endtask
 task packet_generation();
 reg [7:0]payload_data,parity,header;
 reg [5:0]payload_length;
-reg [7:0]addr;
+reg [1:0]addr;
 
 begin
     @(negedge clock)
-    wait(~busy)
+     wait(~busy)
     @(negedge clock)
     payload_length = 6'd14;
-    addr = 2'b10;
+    addr = 2'b01;
     pkt_valid = 1'b1;
     header = {payload_length,addr};
     parity = 8'd0 ^ header;
     data_in = header;
-
+  
     @(negedge clock);
     wait(~busy)
     for(i=0;i<payload_length;i=i+1)
@@ -87,8 +87,8 @@ begin
         payload_data = {$random}%256; 
         data_in = payload_data;
         parity = parity ^ data_in;
-    end  
-
+    end
+   
     @(negedge clock)
     wait(~busy)
     pkt_valid = 1'b0;
@@ -113,17 +113,13 @@ end
 
 initial 
 begin
-    // $monitor("Time=%0t |resetn=%b |read_en_0=%b |read_en_1=%b |read_en_2=%b |busy=%b |pkt_valid=%b |data_in=%b",
-    // $time,resetn,read_en_0,read_en_1,read_en_2,busy,pkt_valid,data_in); 
+    $dumpfile("naveen.vcd");
+    $dumpvars(0,router_top_tb); 
+end 
+initial 
+begin
+    $monitor("Time=%0t |resetn=%b |read_en_0=%b |read_en_1=%b |read_en_2=%b |busy=%b |pkt_valid=%b |data_in=%b",
+    $time,resetn,read_en_0,read_en_1,read_en_2,busy,pkt_valid,data_in); 
 
-    $monitor(
-"Time=%0t State=%0d Next=%0d busy=%b pkt_valid=%b data=%h",
-$time,
-uut.FSM.state,
-uut.FSM.next_state,
-busy,
-pkt_valid,
-data_in
-);
 end 
 endmodule 
